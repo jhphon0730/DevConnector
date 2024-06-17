@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"jhphon0730/DevConnector/models"
 	"jhphon0730/DevConnector/services"
 	"jhphon0730/DevConnector/response"
 	"github.com/gin-gonic/gin"
@@ -9,10 +10,17 @@ import (
 
 type UserController interface {
 	GetUser(c *gin.Context)
+	CreateUser(c *gin.Context)
 }
 
 type userController struct {
 	userService services.UserService
+}
+
+type signupUser struct {
+	Name string `json:"name"`
+	Email string `json:"email"`
+	Password string `json:"password"`
 }
 
 func NewUserController(userService services.UserService) UserController {
@@ -32,6 +40,31 @@ func (u *userController) GetUser(c *gin.Context) {
 	
 	}
 
-	c.JSON(http.StatusOK, user)
+	res := response.CreateResponse(http.StatusOK, user, nil, "User found successfully.")
+	c.JSON(http.StatusOK, res)
+	return
+}
+
+// TEST_CURL: curl -X POST http://localhost:8080/api/users -H "Content-Type: application/json" -d '{"name": "John Doe", "email": "email@gmail.com", "password": "password"}'
+func (u *userController) CreateUser(c *gin.Context) {
+	var user signupUser
+	if err := c.ShouldBindJSON(&user); err != nil {
+		res := response.CreateResponse(http.StatusBadRequest, nil, err, "")
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	newUser := models.User{}
+	newUser.CreateUser(user.Name, user.Email, user.Password)
+
+	createdUser, err := u.userService.CreateUser(&newUser)
+	if err != nil {
+		res := response.CreateResponse(http.StatusInternalServerError, nil, err, "")
+		c.JSON(http.StatusInternalServerError, res)
+		return
+	}
+
+	res := response.CreateResponse(http.StatusCreated, createdUser, nil, "User created successfully.")
+	c.JSON(http.StatusOK, res)
 	return
 }

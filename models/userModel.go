@@ -42,11 +42,13 @@ type Education struct {
     Description  string      `gorm:"type:text" json:"description"`
 }
 
-// 사용자 생성 전에 실행할 작업 정의
-func (user *User) BeforeCreate(tx *gorm.DB) error {
-    user.CreatedAt = time.Now()
-    user.UpdatedAt = time.Now()
-    return nil
+func (u *User) CreateUser(name, email, password string) *User {
+	u.Name = name
+	u.Email = email
+	u.Password = password
+	u.CreatedAt = time.Now()
+	u.UpdatedAt = time.Now()
+	return u
 }
 
 // 경력 생성 전에 실행할 작업 정의
