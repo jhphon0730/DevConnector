@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"jhphon0730/DevConnector/dto"
 	"jhphon0730/DevConnector/models"
 	"jhphon0730/DevConnector/services"
 	"jhphon0730/DevConnector/response"
@@ -15,12 +16,6 @@ type UserController interface {
 
 type userController struct {
 	userService services.UserService
-}
-
-type signupUser struct {
-	Name string `json:"name"`
-	Email string `json:"email"`
-	Password string `json:"password"`
 }
 
 func NewUserController(userService services.UserService) UserController {
@@ -47,7 +42,7 @@ func (u *userController) GetUser(c *gin.Context) {
 
 // TEST_CURL: curl -X POST http://localhost:8080/api/users -H "Content-Type: application/json" -d '{"name": "John Doe", "email": "email@gmail.com", "password": "password"}'
 func (u *userController) CreateUser(c *gin.Context) {
-	var user signupUser
+	var user dto.CreateUserDTO
 	if err := c.ShouldBindJSON(&user); err != nil {
 		res := response.CreateResponse(http.StatusBadRequest, nil, err, "")
 		c.JSON(http.StatusBadRequest, res)
