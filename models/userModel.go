@@ -16,6 +16,7 @@ type User struct {
     Education      []Education    `gorm:"foreignKey:UserID" json:"education"`
     CreatedAt      time.Time      `json:"created_at"`
     UpdatedAt      time.Time      `json:"updated_at"`
+		IsSupper bool `gorm:"default:false"`
 }
 
 // 사용자의 경력 정보를 담고 있으며, 사용자와 일대다 관계
