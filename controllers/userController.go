@@ -42,15 +42,18 @@ func (u *userController) GetUser(c *gin.Context) {
 
 // TEST_CURL: curl -X POST http://localhost:8080/api/users/ -H "Content-Type: application/json" -d '{"name": "John Doe", "email": "email@gmail.com", "password": "password"}'
 func (u *userController) CreateUser(c *gin.Context) {
-	var user dto.CreateUserDTO
-	if err := c.ShouldBindJSON(&user); err != nil {
+	var unCreatedUser dto.CreateUserDTO
+	if err := c.ShouldBindJSON(&unCreatedUser ); err != nil {
 		res := response.CreateResponse(http.StatusBadRequest, nil, err, "")
 		c.JSON(http.StatusBadRequest, res)
 		return
 	}
 
-	newUser := models.User{}
-	newUser.CreateUser(user.Name, user.Email, user.Password)
+	newUser := models.User{
+		Email: unCreatedUser .Email,
+		Name: unCreatedUser.Name,
+		Password: unCreatedUser.Password,
+	}
 
 	createdUser, err := u.userService.CreateUser(&newUser)
 	if err != nil {
