@@ -42,6 +42,8 @@ type Education struct {
     Description  string      `gorm:"type:text" json:"description"`
 }
 
+// 사용자 생성 전에 실행할 작업 정의
+// CreatedAt, UpdatedAt 필드에 현재 시간을 할당
 func (user *User) BeforeCreate(tx *gorm.DB) error {
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now() 
