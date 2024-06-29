@@ -40,7 +40,7 @@ func (u *userController) GetUser(c *gin.Context) {
 	return
 }
 
-// TEST_CURL: curl -X POST http://localhost:8080/api/users -H "Content-Type: application/json" -d '{"name": "John Doe", "email": "email@gmail.com", "password": "password"}'
+// TEST_CURL: curl -X POST http://localhost:8080/api/users/ -H "Content-Type: application/json" -d '{"name": "John Doe", "email": "email@gmail.com", "password": "password"}'
 func (u *userController) CreateUser(c *gin.Context) {
 	var user dto.CreateUserDTO
 	if err := c.ShouldBindJSON(&user); err != nil {
