@@ -18,6 +18,11 @@ func userRoutes(router *gin.Engine) {
 		{
 			userRoute.GET("/:user_id", userController.GetUser)
 			userRoute.POST("/", userController.CreateUser)
+
+			experienceRoute := userRoute.Group("/experience")
+			{
+				experienceRoute.POST("/:user_id", userController.CreateUserExperience)
+			}
 		}
 	}
 }

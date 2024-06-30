@@ -11,7 +11,7 @@ type User struct {
     Email          string         `gorm:"size:100;not null;unique" json:"email"`
     Password       string         `gorm:"size:255;not null" json:"-"`
     ProfilePicture string         `gorm:"size:255" json:"profile_picture"`
-    Skills         string         `gorm:"type:text" json:"skills"`
+		Stack          []string       `gorm:"type:text[]" json:"stack"`
     Experience     []Experience   `gorm:"foreignKey:UserID" json:"experience"`
     Education      []Education    `gorm:"foreignKey:UserID" json:"education"`
     CreatedAt      time.Time      `json:"created_at"`
@@ -51,20 +51,3 @@ func (user *User) BeforeCreate(tx *gorm.DB) error {
 	return nil
 }
 
-// 경력 생성 전에 실행할 작업 정의
-func (experience *Experience) BeforeCreate(tx *gorm.DB) error {
-    experience.StartDate = time.Now()
-    if experience.EndDate == nil {
-        experience.EndDate = new(time.Time)  // 초기화하여 nil 포인터 문제 해결
-    }
-    return nil
-}
-
-// 학력 생성 전에 실행할 작업 정의
-func (education *Education) BeforeCreate(tx *gorm.DB) error {
-    education.StartDate = time.Now()
-    if education.EndDate == nil {
-        education.EndDate = new(time.Time)  // 초기화하여 nil 포인터 문제 해결
-    }
-    return nil
-}

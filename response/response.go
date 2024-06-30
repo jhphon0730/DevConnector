@@ -3,7 +3,7 @@ package response
 type Response struct {
 	StatusCode int
 	Data interface{}
-	Error error
+	Error string
 	Message string
 }
 
@@ -11,8 +11,7 @@ func CreateResponse(statusCode int, data interface{}, error error, message strin
 	if error != nil {
 		var res Response
 		res.StatusCode = statusCode
-		res.Data = data
-		res.Error = error
+		res.Error = error.Error()
 		if message == "" {
 			res.Message = createErrorMessage(error)
 		} else {
@@ -24,7 +23,7 @@ func CreateResponse(statusCode int, data interface{}, error error, message strin
 	return Response{
 		StatusCode: statusCode,
 		Data: data,
-		Error: nil,
+		Error: "",
 		Message: message,
 	}
 }

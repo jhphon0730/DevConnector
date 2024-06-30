@@ -12,6 +12,8 @@ import (
 type UserController interface {
 	GetUser(c *gin.Context)
 	CreateUser(c *gin.Context)
+
+	CreateUserExperience(c *gin.Context)
 }
 
 type userController struct {
@@ -65,4 +67,45 @@ func (u *userController) CreateUser(c *gin.Context) {
 	res := response.CreateResponse(http.StatusCreated, createdUser, nil, "User created successfully.")
 	c.JSON(http.StatusOK, res)
 	return
+}
+
+// TEST_CURL: curl -X POST http://localhost:8080/api/users/experience/1 -H "Content-Type: application/json" -d '[{"title": "Software Engineer", "company": "Google", "startDate": "2021-01-01", "endDate": "2021-12-31", "description": "Software Engineer at Google"}]'
+func (u *userController) CreateUserExperience(c *gin.Context) {
+	var unCreatedUserExperience []dto.CreateUserExperienceDTO
+	if err := c.ShouldBindJSON(&unCreatedUserExperience); err != nil {
+		res := response.CreateResponse(http.StatusBadRequest, nil, err, "")
+		c.JSON(http.StatusBadRequest, res)
+		return
+	}
+
+	user, err := u.userService.GetUser(c.Param("user_id"))
+	if err != nil {
+		res := response.CreateResponse(http.StatusInternalServerError, nil, err, "")
+		c.JSON(http.StatusInternalServerError, res)
+		return
+	}
+
+	var experiences []models.Experience
+	for _, experience := range unCreatedUserExperience {
+		experience := models.Experience{
+			UserID: user.ID,
+			Title: experience.Title,
+			Company: experience.Company,
+			StartDate: experience.StartDate,
+			EndDate: experience.EndDate,
+			Description: experience.Description,
+		}
+		experiences = append(experiences, experience)
+	}
+	user.Experience = experiences
+
+	err = u.userService.CreateUserExperience(user)
+	if err != nil {
+		res := response.CreateResponse(http.StatusInternalServerError, nil, err, "")
+		c.JSON(http.StatusInternalServerError, res)
+		return
+	}
+
+	res := response.CreateResponse(http.StatusCreated, user, nil, "Experience created successfully.")
+	c.JSON(http.StatusCreated, res)
 }
