@@ -28,7 +28,6 @@ type Experience struct {
     StartDate   time.Time   `json:"start_date"`
     EndDate     *time.Time  `json:"end_date"`
     Description string      `gorm:"type:text" json:"description"`
-		IsCurrent   bool        `gorm:"default:false" json:"is_current"` // 현재 직장인지 여부
 }
 
 // 사용자의 학력 정보를 담고 있으며, 사용자와 일대다 관계
