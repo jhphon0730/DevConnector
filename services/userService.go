@@ -7,6 +7,7 @@ import (
 
 type UserService interface {
 	GetUser(user_id string) (*models.User, error)
+	GetUserWithExperience(user_id string) (*models.User, error)
 	CreateUser(user *models.User) (*models.User, error)
 	CreateUserExperience(user *models.User) (error)
 }
@@ -19,6 +20,15 @@ func NewUserService() UserService {
 }
 
 func (u *userService) GetUser(user_id string) (*models.User, error) {
+	var user models.User
+	if result := database.DB.First(&user, user_id); result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &user, nil
+}
+
+func (u *userService) GetUserWithExperience(user_id string) (*models.User, error) {
 	var user models.User
 	if result := database.DB.Preload("Experience").First(&user, user_id); result.Error != nil {
 		return nil, result.Error
