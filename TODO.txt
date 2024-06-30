@@ -1,0 +1,2 @@
+# WORKS 
+1. 사용자 정보 조회와 사용자 정보 조회 WITH 경력 Controller/Service/Route 분리
