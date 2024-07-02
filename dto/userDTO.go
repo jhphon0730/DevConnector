@@ -11,10 +11,17 @@ type CreateUserDTO struct {
 }
 
 type CreateUserExperienceDTO struct {
-	UserID 		uint        `json:"user_id"`
 	Title       string      `json:"title"`
 	Company     string      `json:"company"`
 	Description string      `json:"description"`
   StartDate   time.Time   `json:"start_date"`
   EndDate     *time.Time  `json:"end_date"`
+}
+
+type UpdateUserExperienceDTO struct {
+	Title       string      `json:"title"`
+	Company     string      `json:"company"`
+	Description string      `json:"description"`
+	StartDate   time.Time   `json:"start_date"`
+	EndDate     *time.Time  `json:"end_date"`
 }

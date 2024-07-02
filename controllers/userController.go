@@ -71,6 +71,7 @@ func (u *userController) CreateUser(c *gin.Context) {
 
 // TEST_CURL: curl -X POST http://localhost:8080/api/users/experience/1 -H "Content-Type: application/json" -d '[{"title": "Software Engineer", "company": "Google", "startDate": "2021-01-01", "endDate": "2021-12-31", "description": "Software Engineer at Google"}]'
 func (u *userController) CreateUserExperience(c *gin.Context) {
+	userID := c.Param("user_id")
 	var unCreatedUserExperience []dto.CreateUserExperienceDTO
 	if err := c.ShouldBindJSON(&unCreatedUserExperience); err != nil {
 		res := response.CreateResponse(http.StatusBadRequest, nil, err, "")
@@ -78,7 +79,7 @@ func (u *userController) CreateUserExperience(c *gin.Context) {
 		return
 	}
 
-	user, err := u.userService.GetUser(c.Param("user_id"))
+	user, err := u.userService.GetUser(userID)
 	if err != nil {
 		res := response.CreateResponse(http.StatusInternalServerError, nil, err, "")
 		c.JSON(http.StatusInternalServerError, res)
@@ -108,4 +109,8 @@ func (u *userController) CreateUserExperience(c *gin.Context) {
 
 	res := response.CreateResponse(http.StatusCreated, user, nil, "Experience created successfully.")
 	c.JSON(http.StatusCreated, res)
+}
+
+func (u *userController) UpdateUserExperience(c *gin.Context) {
+
 }
