@@ -7,6 +7,8 @@ import (
 	"log"
 )
 
+// type DB struct *gorm.DB ( var DB *gorm.DB ) -> DB is a pointer to gorm.DB
+
 var (
 	DB *gorm.DB
 	err error
